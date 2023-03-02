@@ -245,6 +245,55 @@ PATHを通すコマンドが記事と異なり、自分は以下のコマンド�
 
 Hombrewのインストールに含まれる。
 
+### Git: ユーザー・メールアドレス登録
+
+```bash
+git config --global user.name "ユーザー名"
+git config --global user.email メールアドレス
+```
+
+### Git: SSHキー設定
+
+```bash
+
+# GitHubに登録しているメールアドレスでSSH keyを生成
+$ ssh-keygen -t rsa -C hoge@example.com
+
+# 以下の事が聞かれるので、特に設定しなければならない場合を除き『Enter』キーを入力して進む。
+Enter file in which to save the key (~/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+
+$ ls ~/.ssh
+
+# 以下2つのファイルが存在していたらOK。
+id_rsa
+id_rsa.pub
+
+# Githubにログイン,SSH key新規作成画面へ。
+Settings > SSH and GPG keys > New SSH keys
+
+# id_rsa.pub(秘密鍵ファイル)の内容を表示
+$ less ~/.ssh/id_rsa.pub
+
+↑英数字の羅列が表示されるので、メールアドレス前までを全てコピー。
+New SSH keysの設定画面内のKeyへペースト > Add SSH Keyをクリック。
+
+# configファイルを開き、SSH接続用にホストを設定する
+$ vi ~/.ssh/config
+
+# Viエディタで以下を入力。(iで入力、escで入力解除、:wqで保存してviエディタから退出)
+Host github
+  HostName github.com
+  IdentityFile ~/.ssh/id_rsa
+  User git
+
+# SSH接続できているか確認
+$ ssh -T git@github.com
+
+# 下記のメッセージが表示されればSSH接続成功
+Hi 『ユーザー名』! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
 ### Volta
 
 [https://volta.sh/](https://volta.sh/)
